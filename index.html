@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+  </head>
+  <body>
+    <h3>看誰先選到 20</h3>
+    <form id="form1">
+      <label for="r1"><input type="radio" name="answer" id="r1" value="1" /> 1</label>
+      <label for="r2"><input type="radio" name="answer" id="r2" value="2" /> 2</label>
+      <button>送出</button>
+      <hr>
+      <div id="board">
+        <div>遊戲開始!</div>
+      </div>
+    </form>
+    <script type="text/javascript">
+      const GOAL = 20;
+      let number = 0;
+      const board = document.querySelector('#board');
+
+      // 送出答案
+      form1.addEventListener('submit', e => {
+        e.preventDefault();
+        const elem = document.querySelector(':checked');
+        if(elem && elem.value) {
+          number += +elem.value;
+          board.innerHTML += `<div>你選了${elem.value}, 目前為 ${number}</div>`;
+          if (isWinner("user")) return;
+          AIResponse();
+        }
+      });
+
+      // 電腦做答
+      const AIResponse = () => {
+        const answer = (GOAL - number) % 3 || (~~(Math.random() * 2) + 1);
+        number += answer;
+        board.innerHTML += `<div>電腦選了${answer}, 目前為 ${number}</div>`;
+        if (isWinner("ai")) return;
+      }
+
+      // check 是否為 20
+      const isWinner = who => {
+        if(number === 20) {
+          board.innerHTML += '<h3>' + (who === 'ai' ? '電腦': '你') + '獲勝!</h3>';
+          return true;
+        }
+        return false
+      }
+
+      // 隨機決定電腦還是玩家開始
+      if(~~(Math.random()*2)) {
+        AIResponse();
+      }
+    </script>
+  </body>
+</html>
